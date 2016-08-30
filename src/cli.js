@@ -1,14 +1,16 @@
 "use strict";
 
-var path = require("path");
 var nconf = require("nconf");
-var Storage = require(path.join(__dirname, "storages", "elasticsearch"));
+nconf.argv();
+nconf.required(["user", "password", "storage"]);
+
+var path = require("path");
+
+var Storage = require(path.join(__dirname, "storages", nconf.get("storage")));
 var process = require("process");
 
 var WorkoutsStream = require("@petitchevalroux/sports-tracker-client")
     .WorkoutsStream;
-nconf.argv();
-nconf.required(["user", "password"]);
 
 var wStream = new WorkoutsStream({
     "user": nconf.get("user"),
@@ -20,6 +22,7 @@ var Transform = require("@petitchevalroux/workouts-standardizer")
 var tStream = new Transform();
 
 var storage = new Storage();
+
 var outStream = new require("@petitchevalroux/node-parallel-write-stream")({
     "concurrency": 4,
     "objectMode": true,
@@ -44,6 +47,12 @@ outStream.on("error", function(error) {
 wStream.on("error", function(error) {
     process.stderr.write("Error: " + error + "\n");
 });
-
-wStream.pipe(tStream)
-    .pipe(outStream);
+storage.setup()
+    .then(function() {
+        wStream.pipe(tStream)
+            .pipe(outStream);
+        return true;
+    })
+    .catch(function(err) {
+        process.stderr.write("Error: " + err + "\n");
+    });
