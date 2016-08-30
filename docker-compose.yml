@@ -1,7 +1,22 @@
-elk:
-  image: sebp/elk
-  ports:
-    - "5601:5601"
-    - "9200:9200"
-    - "5044:5044"
-    - "5000:5000"
+version: '2'
+services:
+  elk:
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+      - "5000:5000"
+  influxdb:
+    image: influxdb
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
