@@ -8,6 +8,7 @@ var process = require("process");
 var WorkoutsStream = require("@petitchevalroux/sports-tracker-client")
     .WorkoutsStream;
 nconf.argv();
+nconf.required(["user", "password"]);
 
 var wStream = new WorkoutsStream({
     "user": nconf.get("user"),
