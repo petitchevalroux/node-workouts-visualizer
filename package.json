@@ -30,6 +30,8 @@
     "bluebird": "^3.4.3",
     "elasticsearch": "^11.0.1",
     "influx": "^4.2.1",
-    "nconf": "^0.8.4"
+    "nconf": "^0.8.4",
+    "trace-error": "0.0.7",
+    "winston": "^2.2.0"
   }
 }

@@ -1,13 +1,19 @@
 "use strict";
+var path = require("path");
+var di = require(path.join(__dirname, "di"));
 
 var nconf = require("nconf");
 nconf.argv();
 nconf.required(["user", "password", "storage"]);
 
-var path = require("path");
+// Ovewrite log level
+var logLevel = nconf.get("log-level");
+if (logLevel) {
+    di.log.level = logLevel;
+}
 
 var Storage = require(path.join(__dirname, "storages", nconf.get("storage")));
-var process = require("process");
+
 
 var WorkoutsStream = require("@petitchevalroux/sports-tracker-client")
     .WorkoutsStream;
@@ -29,8 +35,7 @@ var outStream = new require("@petitchevalroux/node-parallel-write-stream")({
     "write": function(data, encoding, callback) {
         storage.write(data)
             .then(function() {
-                process.stdout.write("Writed: " + JSON.stringify(
-                    data) + "\n");
+                di.log.info("writed data:", data);
                 callback();
                 return data;
             })
@@ -41,11 +46,11 @@ var outStream = new require("@petitchevalroux/node-parallel-write-stream")({
 });
 
 outStream.on("error", function(error) {
-    process.stderr.write("Error: " + error + "\n");
+    di.log.error(error);
 });
 
 wStream.on("error", function(error) {
-    process.stderr.write("Error: " + error + "\n");
+    di.log.error(error);
 });
 storage.setup()
     .then(function() {
@@ -54,5 +59,5 @@ storage.setup()
         return true;
     })
     .catch(function(err) {
-        process.stderr.write("Error: " + err + "\n");
+        di.log.error(err);
     });
