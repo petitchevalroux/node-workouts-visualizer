@@ -125,7 +125,7 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"duration\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND time > (now() - 1w) GROUP BY time(1w) fill(null)",
+              "query": "SELECT sum(\"duration\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND time > (now() - 1w)",
               "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
@@ -243,7 +243,7 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"distance\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND time > (now() - 1w) GROUP BY time(1w) fill(null)",
+              "query": "SELECT sum(\"distance\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND time > (now() - 1w)",
               "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
@@ -361,7 +361,7 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"energy\") FROM \"workouts\" WHERE time > (now() - 1w) GROUP BY time(1w) fill(null)",
+              "query": "SELECT sum(\"energy\") FROM \"workouts\" WHERE time > (now() - 1w)",
               "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
@@ -595,8 +595,8 @@
               "hide": false,
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT moving_average(mean(\"duration\"), 3) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w)",
-              "rawQuery": false,
+              "query": "SELECT moving_average(sum(\"duration\"), 5) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w, 4d) fill(0)",
+              "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -646,7 +646,7 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"duration\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
+              "query": "SELECT sum(\"duration\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w,4d) fill(0)",
               "rawQuery": true,
               "refId": "B",
               "resultFormat": "time_series",
@@ -777,8 +777,8 @@
               "hide": false,
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT moving_average(sum(\"duration\"), 5) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT moving_average(sum(\"distance\"), 5) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -828,8 +828,8 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"duration\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT sum(\"distance\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -959,8 +959,8 @@
               "hide": false,
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT moving_average(sum(\"distance\"), 5) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT moving_average(sum(\"energy\"), 5) FROM \"workouts\" WHERE $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1004,8 +1004,8 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"distance\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT sum(\"energy\") FROM \"workouts\" WHERE $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -1129,8 +1129,8 @@
               "hide": false,
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT moving_average(sum(\"distance\"), 5) FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT moving_average(mean(\"avgSpeed\"), 5) *3.6 FROM \"workouts\" WHERE $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1180,8 +1180,8 @@
               ],
               "measurement": "workouts",
               "policy": "default",
-              "query": "SELECT sum(\"distance\") FROM \"workouts\" WHERE \"activity\" = 'cycling' AND $timeFilter GROUP BY time(1w) fill(0)",
-              "rawQuery": false,
+              "query": "SELECT mean(\"avgSpeed\") *3.6 FROM \"workouts\" WHERE $timeFilter GROUP BY time(1w,4d) fill(0)",
+              "rawQuery": true,
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -1245,7 +1245,7 @@
     }
   ],
   "time": {
-    "from": "now-2y",
+    "from": "now-1y",
     "to": "now"
   },
   "timepicker": {
@@ -1281,7 +1281,7 @@
   },
   "refresh": false,
   "schemaVersion": 12,
-  "version": 47,
+  "version": 58,
   "links": [],
   "gnetId": null
 }
