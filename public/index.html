@@ -7,15 +7,53 @@
         <title>Workouts visualizer</title>
     </head>
     <body ng-app="dashboard">
-        <h1>Hello, world!</h1>
-        <p>Angular is working: {{1 + 1 === 2}}</p>
-        <div ng-controller="DashboardCtrl">
-             <p class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popupFrom.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openPopupFrom()"><i class="glyphicon glyphicon-calendar"></i></button>
-                </span>
-            </p>
+        <div class="container" ng-controller="DashboardCtrl">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class=" input-group">
+                        <span class="input-group-addon" id="from-addon">From</span>
+                        <input type="text" class="form-control"
+                               placeholder="{{dateFormat}}"
+                               popup-placement="bottom-right"
+                               aria-describedby="from-addon"
+                               datepicker-options="dateOptions"
+                               uib-datepicker-popup="{{dateFormat}}"
+                               ng-model="dateFrom.value"
+                               is-open="dateFrom.opened"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="dateFrom.open()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="to-addon">To</span>
+                        <input type="text" class="form-control"
+                               placeholder="{{dateFormat}}"
+                               popup-placement="bottom-right"
+                               aria-describedby="to-addon"
+                               datepicker-options="dateOptions"
+                               uib-datepicker-popup="{{dateFormat}}"
+                               ng-model="dateTo.value"
+                               is-open="dateTo.opened"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="dateTo.open()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="btn-group" uib-dropdown>
+                    <button id="mesure-button" type="button" class="btn dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                        {{dropdownMesure.selected.label}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="mesure-button">
+                        <li role="menuitem" ng-repeat="option in dropdownMesure.others"><a href="#" ng-click="dropdownMesure.select(option.value)">{{option.label}}</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <script src="/assets/dashboard.js"></script>
     </body>
