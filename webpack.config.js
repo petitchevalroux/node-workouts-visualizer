@@ -8,8 +8,8 @@ module.exports = {
         "dashboard": path.join(__dirname, "src/client/dashboard.js"),
     },
     output: {
-        publicPath: "assets/",
-        path: path.join(__dirname, 'public/assets'),
+        publicPath: "assets/bundle/",
+        path: path.join(__dirname, 'public/assets/bundle'),
         filename: "[name].js",
     },
     module: {
