@@ -18,6 +18,15 @@ var staticOptions = {
     "dotfiles": "deny"
 };
 
+
+
+app.get("/data/time/:measure/:period", function(req, res, next) {
+    var DataController = require(path.join(__dirname, "..", "server",
+        "controllers", "data"));
+    var dataController = new DataController();
+    dataController.time(req, res, next);
+});
+
 app.use(function(req, res, next) {
     res.sendFile(req.url, staticOptions, function(err) {
         if (err) {

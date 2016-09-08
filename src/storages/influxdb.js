@@ -133,5 +133,39 @@ Storage.prototype.write = function(data) {
         });
 };
 
+Storage.prototype.getTimeSeries = function(aggregateFunction, measure, period) {
+    return new Promise(function(resolve, reject) {
+        var offset = "";
+        if (period === "w") {
+            offset = ", 4d";
+            period = "1w";
+        } else if (period === "M") {
+            period = "30d";
+        } else if (period === "y") {
+            period = "365d";
+        } else if (period === "d") {
+            period = "1d";
+        }
+        if (aggregateFunction === "avg") {
+            aggregateFunction = "mean";
+        }
+        var stat = aggregateFunction + "(\"" + measure + "\")";
+        var query = "SELECT " + stat +
+            " as v, moving_average(" + stat +
+            ", 5) as avg FROM workouts WHERE time < now()" +
+            " GROUP BY time(" + period + offset + ") fill(0)";
+        di.log.debug("query", query);
+        di.influx.query("workouts", query, function(err, data) {
+            if (err) {
+                reject(new di.Error(
+                    "unable to get timeseries",
+                    err));
+            } else {
+                resolve(data[0]);
+            }
+        });
+    });
+};
+
 
 module.exports = Storage;
