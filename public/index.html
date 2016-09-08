@@ -45,8 +45,11 @@
                         </span>
                     </div>
                 </div>
-                <div class="pull-left" data-my-dropdown-select data-items="measures" data-ng-model="measure"></div>
-                <div class="pull-left" data-my-dropdown-select data-items="periods" data-ng-model="period"></div>
+                <div class="pull-left" data-my-dropdown-select data-items="measures" data-ng-model="measure" data-ng-change="change"></div>
+                <div class="pull-left" data-my-dropdown-select data-items="periods" data-ng-model="period" data-ng-change="change"></div>
+            </div>
+            <div id="chart" class="row">
+
             </div>
         </div>
         <script src="/assets/bundle/dashboard.js"></script>

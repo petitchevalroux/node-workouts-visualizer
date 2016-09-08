@@ -36,10 +36,11 @@ module.exports = function() {
 
             $scope.others = [];
             $scope.select = function(selectedValue, emitChange) {
-                emitChange = typeof emitChange === "undefined" ? true : emitChange;
+                emitChange = typeof emitChange === "undefined" ?
+                    true : emitChange;
                 $scope.others = [];
                 $scope.ngModel = selectedValue;
-                if(emitChange) {
+                if (emitChange) {
                     change();
                 }
                 options.forEach(
@@ -61,7 +62,8 @@ module.exports = function() {
                             i]);
                     }
                 }
-                $scope.select($scope.ngModel || options[0].value, false);
+                $scope.select($scope.ngModel || options[0].value,
+                    false);
             }
         },
         "restrict": "A",
