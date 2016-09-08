@@ -45,14 +45,8 @@
                         </span>
                     </div>
                 </div>
-                <div class="btn-group" uib-dropdown>
-                    <button id="mesure-button" type="button" class="btn dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
-                        {{dropdownMesure.selected.label}} <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="mesure-button">
-                        <li role="menuitem" ng-repeat="option in dropdownMesure.others"><a href="#" ng-click="dropdownMesure.select(option.value)">{{option.label}}</a></li>
-                    </ul>
-                </div>
+                <div class="pull-left" data-my-dropdown-select data-items="measures" data-ng-model="measure"></div>
+                <div class="pull-left" data-my-dropdown-select data-items="periods" data-ng-model="period"></div>
             </div>
         </div>
         <script src="/assets/bundle/dashboard.js"></script>
