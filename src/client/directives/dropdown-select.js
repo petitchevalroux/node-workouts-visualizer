@@ -15,6 +15,13 @@ module.exports = function() {
                         return 0;
                     });
             };
+
+            var change = function() {
+                if (typeof $scope.ngChange === "function") {
+                    $scope.ngChange();
+                }
+            };
+
             var options = [];
             Object.getOwnPropertyNames($scope.items)
                 .forEach(function(value) {
@@ -26,21 +33,15 @@ module.exports = function() {
                     });
                 });
             options = sort(options);
+
             $scope.others = [];
-            if (options.length > 0) {
-                $scope.selected = options[0];
-                $scope.ngModel = options[0].value;
-                if (options.length > 1) {
-                    for (var i = 1; i < options
-                        .length; i++) {
-                        $scope.others.push(options[
-                            i]);
-                    }
-                }
-            }
-            $scope.select = function(selectedValue) {
+            $scope.select = function(selectedValue, emitChange) {
+                emitChange = typeof emitChange === "undefined" ? true : emitChange;
                 $scope.others = [];
                 $scope.ngModel = selectedValue;
+                if(emitChange) {
+                    change();
+                }
                 options.forEach(
                     function(item) {
                         if (selectedValue === item.value) {
@@ -51,12 +52,24 @@ module.exports = function() {
                         }
                     });
             };
+
+            if (options.length > 0) {
+                if (options.length > 1) {
+                    for (var i = 1; i < options
+                        .length; i++) {
+                        $scope.others.push(options[
+                            i]);
+                    }
+                }
+                $scope.select($scope.ngModel || options[0].value, false);
+            }
         },
         "restrict": "A",
         "templateUrl": "/assets/templates/directives/dropdown-select.html",
         "scope": {
             "items": "=",
-            "ngModel": "="
+            "ngModel": "=",
+            "ngChange": "="
         }
     };
 };
