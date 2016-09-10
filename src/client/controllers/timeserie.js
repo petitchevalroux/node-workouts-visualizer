@@ -2,6 +2,7 @@
 module.exports = function($scope, $http) {
     require("c3/c3.css");
     var c3 = require("c3");
+    var d3 = require("d3");
     var moment = require("moment");
     var DateSelector = function() {
         this.value = new Date();
@@ -13,7 +14,7 @@ module.exports = function($scope, $http) {
     };
     $scope.dateFrom = new DateSelector();
     $scope.dateFrom.value = moment()
-        .subtract(6, "months")
+        .subtract(1, "years")
         .toDate();
     $scope.dateTo = new DateSelector();
     $scope.dateFormat = "yyyy-MM-dd";
@@ -38,7 +39,20 @@ module.exports = function($scope, $http) {
     };
     $scope.period = "w";
     $scope.measure = "duration";
-
+    var formatMeasure = function(value) {
+        if ($scope.measure === "duration") {
+            value = moment.duration(value, "seconds")
+                .humanize();
+        } else if ($scope.measure === "avgHeartRate") {
+            value = d3.format(".2f")(value) + " bpm";
+        } else if ($scope.measure === "energy") {
+            value = Math.round(value) + " kcal";
+        } else if ($scope.measure === "avgSpeed" || $scope.measure ===
+            "maxSpeed") {
+            value = d3.format(".2f")(value * 3.6) + " km/h";
+        }
+        return value;
+    };
     var drawing = false;
     var draw = function() {
         if (drawing) {
@@ -56,17 +70,34 @@ module.exports = function($scope, $http) {
             )
             .then(function(response) {
                 var columns = [
+                    ["x"],
                     [$scope.measures[$scope.measure]],
                     ["Average"]
                 ];
                 response.data.forEach(function(value) {
-                    columns[0].push(value.v);
-                    columns[1].push(value.avg);
+                    columns[0].push(moment(value.time)
+                        .format("YYYY-MM-DD"));
+                    columns[1].push(value.v);
+                    columns[2].push(value.avg);
                 });
                 c3.generate({
                     bindto: "#chart",
                     data: {
+                        x: "x",
                         columns: columns
+                    },
+                    axis: {
+                        x: {
+                            type: "timeseries",
+                            tick: {
+                                format: "%Y-%m-%d"
+                            }
+                        },
+                        y: {
+                            tick: {
+                                format: formatMeasure
+                            }
+                        }
                     }
                 });
                 drawing = false;
