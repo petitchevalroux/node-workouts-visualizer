@@ -44,9 +44,12 @@
                             <button type="button" class="btn btn-default" ng-click="dateTo.open()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </div>
+
                 </div>
-                <div class="pull-left" data-my-dropdown-select data-items="measures" data-ng-model="measure" data-ng-change="change"></div>
-                <div class="pull-left" data-my-dropdown-select data-items="periods" data-ng-model="period" data-ng-change="change"></div>
+                <div class="col-sm-6">
+                    <div style="display: inline-block" data-my-dropdown-select data-items="measures" data-ng-model="measure"></div>
+                    <div style="display: inline-block" data-my-dropdown-select data-items="periods" data-ng-model="period"></div>
+                </div>
             </div>
             <div id="chart" class="row">
 

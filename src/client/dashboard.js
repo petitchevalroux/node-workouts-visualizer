@@ -8,7 +8,9 @@ require.ensure(["angular"], function(require) {
         angular.module("dashboard", ["ui.bootstrap"])
             .directive("myDropdownSelect", require(
                 "./directives/dropdown-select.js"))
-            .controller("DashboardCtrl", require(
-                "./controllers/timeserie.js"));
+            .controller("DashboardCtrl", ["$scope", "$http",
+                require(
+                    "./controllers/timeserie.js")
+            ]);
     }, "ng-ui-bootstrap");
 }, "ng");

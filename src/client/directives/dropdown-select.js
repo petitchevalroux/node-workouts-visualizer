@@ -16,12 +16,6 @@ module.exports = function() {
                     });
             };
 
-            var change = function() {
-                if (typeof $scope.ngChange === "function") {
-                    $scope.ngChange();
-                }
-            };
-
             var options = [];
             Object.getOwnPropertyNames($scope.items)
                 .forEach(function(value) {
@@ -35,19 +29,13 @@ module.exports = function() {
             options = sort(options);
 
             $scope.others = [];
-            $scope.select = function(selectedValue, emitChange) {
-                emitChange = typeof emitChange === "undefined" ?
-                    true : emitChange;
+            $scope.select = function(selectedValue) {
                 $scope.others = [];
                 $scope.ngModel = selectedValue;
-                if (emitChange) {
-                    change();
-                }
                 options.forEach(
                     function(item) {
                         if (selectedValue === item.value) {
                             $scope.selected = item;
-
                         } else {
                             $scope.others.push(item);
                         }
@@ -62,16 +50,14 @@ module.exports = function() {
                             i]);
                     }
                 }
-                $scope.select($scope.ngModel || options[0].value,
-                    false);
+                $scope.select($scope.ngModel || options[0].value);
             }
         },
         "restrict": "A",
         "templateUrl": "/assets/templates/directives/dropdown-select.html",
         "scope": {
             "items": "=",
-            "ngModel": "=",
-            "ngChange": "="
+            "ngModel": "="
         }
     };
 };

@@ -1,5 +1,5 @@
 "use strict";
-module.exports = function($scope) {
+module.exports = function($scope, $http) {
     var DateSelector = function() {
         this.value = new Date();
         this.opened = false;
@@ -27,7 +27,7 @@ module.exports = function($scope) {
     $scope.periods = {
         "d": "Day",
         "w": "Week",
-        "m": "Month",
+        "M": "Month",
         "y": "Year"
     };
     $scope.period = "w";
@@ -40,20 +40,36 @@ module.exports = function($scope) {
             return;
         }
         drawing = true;
-        c3.generate({
-            bindto: "#chart",
-            data: {
-                columns: [
-                    ["data1", 30, 200, 100, 400, 150, 250],
-                    ["data2", 50, 20, 10, 40, 15, 25]
-                ]
-            }
-        });
-        drawing = false;
+        $http.get("/data/time/" + $scope.measure + "/" + $scope.period)
+            .then(function(response) {
+                var columns = [
+                    [$scope.measures[$scope.measure]],
+                    ["Average"]
+                ];
+                response.data.forEach(function(value) {
+                    columns[0].push(value.v);
+                    columns[1].push(value.avg);
+                });
+                c3.generate({
+                    bindto: "#chart",
+                    data: {
+                        columns: columns
+                    }
+                });
+                drawing = false;
+                return response.data;
+            })
+            .catch(function() {
+                drawing = false;
+            });
     };
 
-    $scope.change = function() {
+    var change = function() {
         draw();
     };
+
+    $scope.$watch("measure", change);
+    $scope.$watch("period", change);
+
     draw();
 };
