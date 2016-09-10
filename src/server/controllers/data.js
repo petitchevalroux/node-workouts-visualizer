@@ -31,10 +31,15 @@ module.exports = function() {
     this.isValidPeriod = function(period) {
         var self = this;
         return new Promise(function(resolve) {
-
             resolve(self.periods[period] === true);
+        });
+    };
 
-
+    this.isValidDate = function(date) {
+        return new Promise(function(resolve) {
+            var moment = require("moment");
+            resolve(moment(date)
+                .isValid());
         });
     };
 
@@ -57,10 +62,30 @@ module.exports = function() {
                 return req.params.period;
             })
             .then(function() {
+                return self.isValidDate(req.query.from);
+            })
+            .then(function(valid) {
+                if (!valid) {
+                    throw new di.Error.Http(404);
+                }
+                return req.params.from;
+            })
+            .then(function() {
+                return self.isValidDate(req.query.to);
+            })
+            .then(function(valid) {
+                if (!valid) {
+                    throw new di.Error.Http(404);
+                }
+                return req.params.to;
+            })
+            .then(function() {
                 return di.statsStorage.getTimeSeries(
                     self.measures[req.params.measure],
                     req.params.measure,
-                    req.params.period
+                    req.params.period,
+                    req.query.from,
+                    req.query.to
                 );
             })
             .then(function(timeSeries) {

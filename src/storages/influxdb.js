@@ -133,7 +133,8 @@ Storage.prototype.write = function(data) {
         });
 };
 
-Storage.prototype.getTimeSeries = function(aggregateFunction, measure, period) {
+Storage.prototype.getTimeSeries = function(aggregateFunction, measure, period,
+    from, to) {
     return new Promise(function(resolve, reject) {
         var offset = "";
         if (period === "w") {
@@ -152,7 +153,9 @@ Storage.prototype.getTimeSeries = function(aggregateFunction, measure, period) {
         var stat = aggregateFunction + "(\"" + measure + "\")";
         var query = "SELECT " + stat +
             " as v, moving_average(" + stat +
-            ", 5) as avg FROM workouts WHERE time < now()" +
+            ", 5) as avg FROM workouts WHERE time >= '" + from +
+            "'" +
+            " AND time <= '" + to + "'" +
             " GROUP BY time(" + period + offset + ") fill(0)";
         di.log.debug("query", query);
         di.influx.query("workouts", query, function(err, data) {
