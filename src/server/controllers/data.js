@@ -95,4 +95,47 @@ module.exports = function() {
                 next(err);
             });
     };
+
+    this.gauge = function(req, res, next) {
+        var self = this;
+        this.isValidMeasure(req.params.measure)
+            .then(function(valid) {
+                if (!valid) {
+                    throw new di.Error.Http(404);
+                }
+                return req.params.measure;
+            })
+            .then(function() {
+                return self.isValidDate(req.query.from);
+            })
+            .then(function(valid) {
+                if (!valid) {
+                    throw new di.Error.Http(404);
+                }
+                return req.params.from;
+            })
+            .then(function() {
+                return self.isValidDate(req.query.to);
+            })
+            .then(function(valid) {
+                if (!valid) {
+                    throw new di.Error.Http(404);
+                }
+                return req.params.to;
+            })
+            .then(function() {
+                return di.statsStorage.getGauge(
+                    self.measures[req.params.measure],
+                    req.params.measure,
+                    req.query.from,
+                    req.query.to
+                );
+            })
+            .then(function(gauge) {
+                return res.send(gauge);
+            })
+            .catch(function(err) {
+                next(err);
+            });
+    };
 };

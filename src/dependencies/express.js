@@ -18,13 +18,16 @@ var staticOptions = {
     "dotfiles": "deny"
 };
 
-
+var DataController = require(path.join(__dirname, "..", "server",
+    "controllers", "data"));
+var dataController = new DataController();
 
 app.get("/data/time/:measure/:period", function(req, res, next) {
-    var DataController = require(path.join(__dirname, "..", "server",
-        "controllers", "data"));
-    var dataController = new DataController();
     dataController.time(req, res, next);
+});
+
+app.get("/data/gauge/:measure", function(req, res, next) {
+    dataController.gauge(req, res, next);
 });
 
 app.use(function(req, res, next) {

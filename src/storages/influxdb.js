@@ -171,4 +171,27 @@ Storage.prototype.getTimeSeries = function(aggregateFunction, measure, period,
 };
 
 
+Storage.prototype.getGauge = function(aggregateFunction, measure,
+    from, to) {
+    return new Promise(function(resolve, reject) {
+        if (aggregateFunction === "avg") {
+            aggregateFunction = "mean";
+        }
+        var stat = aggregateFunction + "(\"" + measure + "\")";
+        var query = "SELECT " + stat +
+            " as v FROM workouts WHERE time >= '" + from + "'" +
+            " AND time <= '" + to + "'";
+        di.log.debug("query", query);
+        di.influx.query("workouts", query, function(err, data) {
+            if (err) {
+                reject(new di.Error(
+                    "unable to get timeseries",
+                    err));
+            } else {
+                resolve(data[0][0]);
+            }
+        });
+    });
+};
+
 module.exports = Storage;

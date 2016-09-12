@@ -8,6 +8,8 @@ require.ensure(["angular"], function(require) {
         angular.module("dashboard", ["ui.bootstrap"])
             .directive("myDropdownSelect", require(
                 "./directives/dropdown-select.js"))
+            .directive("myGauge", require(
+                "./directives/gauge.js"))
             .controller("DashboardCtrl", ["$scope", "$http",
                 require(
                     "./controllers/timeserie.js")
