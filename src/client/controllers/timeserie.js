@@ -39,10 +39,11 @@ module.exports = function($scope, $http) {
     };
     $scope.period = "w";
     $scope.measure = "duration";
+    var humanizeDuration = require("humanize-duration");
     var formatMeasure = function(value) {
         if ($scope.measure === "duration") {
-            value = moment.duration(value, "seconds")
-                .humanize();
+            value = humanizeDuration(Math.round(
+                value / 60) * 60 * 1000);
         } else if ($scope.measure === "avgHeartRate") {
             value = d3.format(".2f")(value) + " bpm";
         } else if ($scope.measure === "energy") {
