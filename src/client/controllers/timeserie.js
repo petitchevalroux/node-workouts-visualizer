@@ -14,9 +14,15 @@ module.exports = function($scope, $http) {
     };
     $scope.dateFrom = new DateSelector();
     $scope.dateFrom.value = moment()
+        .startOf("isoWeek")
         .subtract(1, "years")
+        .startOf("isoWeek")
         .toDate();
     $scope.dateTo = new DateSelector();
+    $scope.dateTo.value = moment()
+        .startOf("isoWeek")
+        .subtract(1, "seconds")
+        .toDate();
     $scope.dateFormat = "yyyy-MM-dd";
     $scope.dateOptions = {
         formatYear: "yyyy",
